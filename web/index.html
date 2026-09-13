@@ -4,165 +4,521 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>INSPECTION DATA - NOVEO Banque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#191919; --card:#212121; --card2:#1c1c1c; --line:#2e2e2e;
-    --tx:#eaeaea; --mut:#9a9a9a;
-    --green:#34d399; --red:#f87171; --amber:#fbbf24; --orange:#fb923c;
-    --blue:#60a5fa; --purple:#a78bfa;
+    --bg:#0f120f; --bg2:#141813; --card:#181d16; --card2:#12160f; --line:#293026;
+    --tx:#e9ede7; --mut:#98a291; --tx2:#c3ccbc;
+    --green:#4ea86a; --green-br:#5cc47e; --green-deep:#1c5c34; --green-soft:#9fe0b5;
+    --gold:#d9a441; --blue:#5aa0e0; --purple:#a78bd6;
+    --red:#e8615a; --orange:#e8944a; --yellow:#d9bb3a;
+    --font:'IBM Plex Sans',-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--tx);
-       font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
-  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px}
-  h1{font-size:26px;margin:0}
-  h2{font-size:18px;margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .sub{color:var(--mut);margin-top:4px}
-  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
-  .meta{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--mut);font-size:14px;margin-top:10px}
-  .meta b{color:var(--tx)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:6px}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--font);
+       line-height:1.62;font-weight:400;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 72px}
+
+  /* bandeau haut facon institution */
+  .topbar{height:5px;background:linear-gradient(90deg,var(--green-deep),var(--green),var(--gold))}
+  header{padding:34px 0 8px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:38px;height:38px;border-radius:9px;background:var(--green-deep);
+    display:flex;align-items:center;justify-content:center;border:1px solid var(--green)}
+  .brand .mark span{color:var(--green-soft);font-weight:700;font-size:19px;font-family:var(--mono)}
+  .brand h1{font-size:24px;margin:0;font-weight:700;letter-spacing:.02em}
+  .brand .tl{color:var(--mut);font-size:14px;margin-top:1px}
+
+  h2{font-size:19px;margin:40px 0 6px;font-weight:600;color:var(--tx)}
+  h2 .kicker{display:block;font-size:12px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--green);margin-bottom:3px}
+  h3{font-size:15px;margin:18px 0 6px;font-weight:600}
+  p{margin:8px 0}
+  .lead{font-size:16px;color:var(--tx2)}
+  a{color:var(--green-br);text-decoration:none}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin:14px 0}
+  .soft{background:var(--card2)}
+  .note{border-left:3px solid var(--green);padding:12px 16px;background:var(--card2);border-radius:0 8px 8px 0;margin:12px 0}
+  .note b{color:var(--green-br)}
+
+  .tag{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+  .meta{display:flex;flex-wrap:wrap;gap:9px 24px;color:var(--mut);font-size:14px;margin-top:12px}
+  .meta b{color:var(--tx);font-weight:600}
+
+  /* etapes */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+  .step{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:15px 16px}
+  .step .n{width:24px;height:24px;border-radius:50%;background:var(--green-deep);color:var(--green-soft);
+    display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:var(--mono)}
+  .step h3{margin:8px 0 4px}
+  .step p{font-size:13.5px;color:var(--mut);margin:0}
+
+  /* stats + charts */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:6px}
   .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
-  .stat .n{font-size:28px;font-weight:700}
-  .stat .l{color:var(--mut);font-size:13px;margin-top:2px}
-  .ctrl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .ctrl-id{font-weight:700;font-family:ui-monospace,Menlo,Consolas,monospace}
-  .pill-Qualité{color:var(--blue);border-color:var(--blue)}
-  .st-ok{color:var(--green);border-color:var(--green)}
-  .st-ko{color:var(--red);border-color:var(--red)}
-  .crit-Critique{color:var(--red);border-color:var(--red)}
-  .crit-Élevé{color:var(--orange);border-color:var(--orange)}
-  .crit-Modéré{color:var(--amber);border-color:var(--amber)}
-  .crit-Conforme{color:var(--green);border-color:var(--green)}
-  .desc{color:var(--mut);font-size:14px;margin:8px 0}
-  .constat{margin:10px 0 6px}
-  .reco{background:var(--card2);border-left:3px solid var(--green);padding:10px 12px;border-radius:6px;font-size:14px}
-  .reco b{color:var(--green)}
-  details{margin-top:10px}
+  .stat .n{font-size:30px;font-weight:700;line-height:1}
+  .stat .l{color:var(--mut);font-size:12.5px;margin-top:6px}
+  .charts{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:680px){.charts{grid-template-columns:1fr}}
+  .chart-t{font-size:13px;color:var(--mut);font-weight:600;margin-bottom:10px}
+  .legend-row{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px;font-size:12.5px;color:var(--mut)}
+  .legend-row i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+  /* controles */
+  .ctrl-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .ctrl-id{font-weight:600;font-family:var(--mono);font-size:14px}
+  .pill-Qualité{color:var(--blue);border-color:#31465c}
+  .pill-Gouvernance{color:var(--purple);border-color:#443a5c}
+  .pill-Protection{color:var(--gold);border-color:#5c4d2a}
+  .st-ok{color:var(--green-br);border-color:#2b5c3c}
+  .st-ko{color:var(--red);border-color:#5c3130}
+  .crit-Critique{color:var(--red);border-color:#5c3130}
+  .crit-Élevé{color:var(--orange);border-color:#5c4326}
+  .crit-Modéré{color:var(--yellow);border-color:#5a5326}
+  .crit-Conforme{color:var(--green-br);border-color:#2b5c3c}
+  .desc{color:var(--tx2);font-size:14.5px;margin:10px 0 2px}
+  .why{color:var(--mut);font-size:13.5px;margin:2px 0 10px}
+  .why b{color:var(--tx2);font-weight:600}
+  .constat{font-size:14.5px;margin:8px 0}
+  .reco{background:var(--card2);border-left:3px solid var(--green);padding:11px 14px;border-radius:0 7px 7px 0;font-size:14px;margin-top:8px}
+  .reco b{color:var(--green-br)}
+  details{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
   summary{cursor:pointer;color:var(--mut);font-size:13px}
-  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#cbd5e1;
-       display:block;white-space:pre-wrap;background:#111;padding:10px;border-radius:6px;margin-top:8px}
-  .ex{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--mut)}
-  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
-  th{color:var(--mut);font-weight:600}
-  .legend{color:var(--mut);font-size:13px}
-  footer{color:var(--mut);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+  code{font-family:var(--mono);font-size:12.5px;color:#cbd8c4;display:block;white-space:pre-wrap;
+    background:#0b0e0a;border:1px solid var(--line);padding:11px;border-radius:7px;margin-top:8px}
+  .ex{font-family:var(--mono);font-size:12px;color:var(--mut);margin-top:8px}
+
+  /* F1 */
+  .formula{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+    font-family:var(--mono);font-size:14px;color:var(--tx2);margin:8px 0}
+  .formula b{color:var(--green-br)}
+  .cmat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+  .cmat div{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:12px}
+  .cmat .h{font-weight:600;font-size:13.5px;margin-bottom:2px}
+  .cmat .vp{color:var(--green-br)} .cmat .fp{color:var(--orange)} .cmat .fn{color:var(--red)}
+  .cmat p{font-size:12.5px;color:var(--mut);margin:0}
+  .worked{background:var(--card2);border:1px dashed var(--green-deep);border-radius:9px;padding:14px 16px;margin:12px 0}
+  .worked .r{font-family:var(--mono);font-size:13px;color:var(--tx2);margin:3px 0}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  td.mono{font-family:var(--mono)}
+  tr.total td{border-top:2px solid var(--green-deep);font-weight:600;color:var(--tx)}
+
+  footer{color:var(--mut);font-size:13px;margin-top:44px;border-top:1px solid var(--line);padding-top:18px}
+
+
+  /* explorateur de donnees */
+  .exp-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+  .exp-bar .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .exp-bar .seg button{background:transparent;color:var(--mut);border:0;padding:7px 14px;cursor:pointer;font-family:var(--font);font-size:13.5px}
+  .exp-bar .seg button.on{background:var(--green-deep);color:var(--green-soft)}
+  .exp-bar select,.exp-bar input{background:var(--card2);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-family:var(--font);font-size:13.5px}
+  .exp-bar input{flex:1;min-width:150px}
+  .exp-count{color:var(--mut);font-size:12.5px;margin-left:auto;white-space:nowrap}
+  .exp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  .exp-table{width:100%;border-collapse:collapse;font-size:13px}
+  .exp-table th{color:var(--mut);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;text-align:left;background:var(--card2)}
+  .exp-table td,.exp-table th{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .exp-table tr.anom td{background:rgba(232,97,90,.07)}
+  .exp-table tr.anom td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+  .exp-flags .tag{font-size:10.5px;padding:1px 6px;margin-right:3px;color:var(--red);border-color:#5c3130}
+  .pager{display:flex;align-items:center;gap:10px;margin-top:12px;justify-content:center;color:var(--mut);font-size:13px}
+  .pager button{background:var(--card2);color:var(--tx2);border:1px solid var(--line);border-radius:7px;padding:6px 12px;cursor:pointer;font-family:var(--font)}
+  .pager button:disabled{opacity:.4;cursor:default}
+
   @media print{
-    body{background:#fff;color:#111}
-    .card,.stat{background:#fff;border-color:#ccc}
-    .reco{background:#f4f4f4}
-    code{background:#f4f4f4;color:#111}
+    .topbar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff;color:#15181a}
+    .card,.stat,.step,.cmat div{background:#fff;border-color:#d5d5d5}
+    .note,.reco,.worked,.formula,.soft{background:#f5f7f4}
+    code{background:#f4f4f4;color:#111;border-color:#ddd}
+    .lead,.desc,.tx2{color:#333}
+    a{color:#1c5c34}
+    h2{page-break-after:avoid} .card,.step{page-break-inside:avoid}
   }
 </style>
 </head>
 <body>
+<div class="topbar"></div>
 <div class="wrap" id="app"></div>
 <script src="findings.js"></script>
+<script src="data.js"></script>
 <script>
 const d = window.INSPECTION_DATA;
 const app = document.getElementById("app");
-const esc = s => String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const esc = s => String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const h = html => { const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; };
+const critColor = { "Critique":"var(--red)","Élevé":"var(--orange)","Modéré":"var(--yellow)","Conforme":"var(--green-br)" };
 
-function h(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; }
+// pourquoi chaque controle compte (pedagogie metier)
 
-// -- En-tete + cadrage --
 const m = d.mission;
+
+/* ===================== EN-TETE ===================== */
 app.appendChild(h(`
-  <div>
-    <h1>INSPECTION DATA</h1>
-    <div class="sub">${esc(m.titre)} &mdash; ${esc(m.entite)}</div>
-    <div class="card" style="margin-top:16px">
-      <div class="meta">
-        <span><b>Entité auditée :</b> ${esc(m.entite)}</span>
-        <span><b>Périmètre :</b> ${esc(m.perimetre)}</span>
-        <span><b>Date de mission :</b> ${esc(m.date_mission)}</span>
-        <span><b>Référentiels :</b> ${m.referentiels.map(esc).join(", ")}</span>
-        <span><b>Volumétrie :</b> ${d.dataset.clients} clients, ${d.dataset.prets} prêts</span>
-      </div>
-      <p style="margin:12px 0 0">${esc(m.cadrage)}</p>
-      <p class="legend" style="margin:10px 0 0">
-        Comment lire ce rapport : chaque contrôle vérifie une règle sur les données. Un contrôle
-        <span class="tag st-ko">NON CONFORME</span> signale des anomalies, notées de
-        <span class="tag crit-Modéré">Modéré</span> à <span class="tag crit-Critique">Critique</span>.
-        La fiabilité du moteur mesure sa capacité à détecter les anomalies sans se tromper.
-      </p>
+<header>
+  <div class="brand">
+    <div class="mark"><span>ID</span></div>
+    <div>
+      <h1>INSPECTION DATA</h1>
+      <div class="tl">${esc(m.titre)} &nbsp;&middot;&nbsp; ${esc(m.entite)}</div>
     </div>
   </div>
-`));
+</header>`));
 
-// -- Synthese --
-const s = d.synthese;
-const total = d.controles.length;
+/* ===================== INTRO NOVICE ===================== */
+app.appendChild(h(`
+<div class="card">
+  <p class="lead">Ce site est le <b>rapport d'une mission d'inspection des données</b> menée sur une
+  banque fictive, <b>${esc(m.entite)}</b>. En clair : on a examiné les données d'une banque pour y
+  chercher des erreurs et des risques, exactement comme le ferait un inspecteur, puis on a tout consigné ici.</p>
+  <p style="color:var(--mut);margin-bottom:0">Aucune connaissance technique n'est nécessaire pour lire ce
+  rapport : chaque section est expliquée en langage simple. Vous pouvez le parcourir de haut en bas.</p>
+</div>`));
+
+/* ===================== C'EST QUOI UNE INSPECTION DATA ===================== */
+app.appendChild(h(`<h2><span class="kicker">Le principe</span>C'est quoi une inspection des données ?</h2>`));
+app.appendChild(h(`
+<div class="card soft">
+  <p>Une banque prend des décisions à partir de ses données : accorder un prêt, mesurer ses risques,
+  produire des rapports pour le régulateur. Si ces données sont <b>fausses, incomplètes ou mal protégées</b>,
+  les décisions le sont aussi. Le rôle d'un <b>inspecteur Data</b> est de porter un regard critique et
+  indépendant sur ces données : vérifier qu'elles sont fiables, identifier les risques, et recommander des corrections.</p>
+  <p style="margin-bottom:0">Cette mission simule ce travail de bout en bout, sur un périmètre précis :
+  la <b>chaîne de données du risque de crédit</b> (les informations sur les clients et sur les prêts qu'ils ont contractés).</p>
+</div>`));
+
+/* ===================== CONTEXTE NOVEO ===================== */
+app.appendChild(h(`<h2><span class="kicker">Le contexte</span>La banque auditée : ${esc(m.entite)}</h2>`));
+app.appendChild(h(`
+<div class="card">
+  <div class="meta">
+    <span><b>Entité auditée :</b> ${esc(m.entite)} (banque de détail fictive)</span>
+    <span><b>Périmètre :</b> ${esc(m.perimetre)}</span>
+    <span><b>Date de mission :</b> ${esc(m.date_mission)}</span>
+    <span><b>Volumétrie examinée :</b> ${d.dataset.clients} clients, ${d.dataset.prets} prêts</span>
+  </div>
+  <div style="margin-top:12px">
+    <span class="tag" style="margin-right:6px">Référentiels utilisés</span>
+    ${m.referentiels.map(r=>`<span class="tag" style="color:var(--green-soft);border-color:#2b5c3c;margin-right:6px">${esc(r)}</span>`).join("")}
+  </div>
+  <p class="why" style="margin-top:12px"><b>À quoi servent ces référentiels ?</b> Ce sont les règles de
+  place que doit respecter une banque. <b>BCBS 239</b> encadre la qualité des données de risque,
+  <b>DAMA-DMBOK</b> est le standard de gouvernance des données, et le <b>RGPD</b> protège les données personnelles.</p>
+</div>`));
+
+/* ===================== COMMENT CA MARCHE ===================== */
+app.appendChild(h(`<h2><span class="kicker">La méthode</span>Comment se déroule la mission</h2>`));
+app.appendChild(h(`
+<div class="steps">
+  <div class="step"><span class="n">1</span><h3>Cadrage</h3><p>On définit le périmètre à inspecter et les règles à vérifier, selon les risques identifiés.</p></div>
+  <div class="step"><span class="n">2</span><h3>Investigations</h3><p>On lance des contrôles automatiques sur les données. Chaque anomalie est comptée et notée par gravité.</p></div>
+  <div class="step"><span class="n">3</span><h3>Débriefing</h3><p>On consigne les constats dans un registre et on formule des recommandations concrètes.</p></div>
+</div>
+<div class="note">
+  <b>Comment fonctionne le moteur.</b> Les contrôles sont des <b>règles écrites en code</b> (une par type
+  d'erreur recherchée). C'est le code qui détecte, compte et note les anomalies. Rien n'est laissé à
+  l'appréciation d'une intelligence artificielle : les résultats sont donc <b>reproductibles et vérifiables</b>,
+  ce qui est indispensable pour un travail d'audit.
+</div>`));
+
+/* ===================== COMMENT LIRE ===================== */
+app.appendChild(h(`
+<div class="card soft">
+  <h3 style="margin-top:0">Comment lire le rapport</h3>
+  <p style="margin:6px 0">Chaque contrôle vérifie une règle précise. Son résultat est soit
+  <span class="tag st-ok">CONFORME</span> (aucune anomalie), soit <span class="tag st-ko">NON CONFORME</span>
+  (des anomalies ont été trouvées). Dans ce dernier cas, une <b>criticité</b> indique la gravité :</p>
+  <div class="legend-row">
+    <span><i style="background:var(--red)"></i>Critique : impact fort et immédiat</span>
+    <span><i style="background:var(--orange)"></i>Élevé : à corriger en priorité</span>
+    <span><i style="background:var(--yellow)"></i>Modéré : à traiter</span>
+    <span><i style="background:var(--green-br)"></i>Conforme : rien à signaler</span>
+  </div>
+</div>`));
+
+/* ===================== SYNTHESE + CHARTS ===================== */
+const s = d.synthese, total = d.controles.length;
 const conf = Math.round((s.conformes/total)*100);
-app.appendChild(h(`<h2>Synthèse</h2>`));
+app.appendChild(h(`<h2><span class="kicker">Vue d'ensemble</span>Synthèse de la mission</h2>`));
 app.appendChild(h(`
-  <div class="grid">
-    <div class="stat"><div class="n" style="color:var(--red)">${s["Critique"]||0}</div><div class="l">Constats critiques</div></div>
-    <div class="stat"><div class="n" style="color:var(--orange)">${s["Élevé"]||0}</div><div class="l">Constats élevés</div></div>
-    <div class="stat"><div class="n" style="color:var(--amber)">${s["Modéré"]||0}</div><div class="l">Constats modérés</div></div>
-    <div class="stat"><div class="n">${conf}%</div><div class="l">Contrôles conformes</div></div>
-    <div class="stat"><div class="n" style="color:var(--green)">${d.eval.f1.toFixed(2)}</div><div class="l">Fiabilité (F1)</div></div>
-  </div>
-`));
+<div class="grid">
+  <div class="stat"><div class="n" style="color:var(--red)">${s["Critique"]||0}</div><div class="l">Constats critiques</div></div>
+  <div class="stat"><div class="n" style="color:var(--orange)">${s["Élevé"]||0}</div><div class="l">Constats élevés</div></div>
+  <div class="stat"><div class="n" style="color:var(--yellow)">${s["Modéré"]||0}</div><div class="l">Constats modérés</div></div>
+  <div class="stat"><div class="n">${conf}%</div><div class="l">Contrôles conformes</div></div>
+  <div class="stat"><div class="n" style="color:var(--green-br)">${d.eval.f1.toFixed(2)}</div><div class="l">Fiabilité (F1)</div></div>
+</div>`));
 
-// -- Registre --
-app.appendChild(h(`<h2>Registre des constats</h2>`));
-d.controles.forEach(c => {
-  const stCls = c.statut === "CONFORME" ? "st-ok" : "st-ko";
-  const reco = c.recommandation ? `<div class="reco"><b>Recommandation :</b> ${esc(c.recommandation)}</div>` : "";
-  const ex = c.exemples.length ? `<div class="ex">Exemples : ${c.exemples.map(esc).join(", ")}</div>` : "";
+// --- CHART 1 : barres anomalies par controle ---
+const maxExc = Math.max(...d.controles.map(c=>c.exceptions), 1);
+const barW = 300, rowH = 34;
+let bars = "";
+d.controles.forEach((c,i)=>{
+  const y = i*rowH+6;
+  const w = Math.max((c.exceptions/maxExc)*barW, c.exceptions>0?4:0);
+  const col = critColor[c.criticite]||"var(--green-br)";
+  bars += `
+    <text x="0" y="${y+13}" fill="var(--mut)" font-size="12" font-family="var(--mono)">${esc(c.id)}</text>
+    <rect x="70" y="${y}" width="${w}" height="20" rx="4" fill="${col}"></rect>
+    <text x="${70+w+6}" y="${y+15}" fill="var(--tx2)" font-size="12">${c.exceptions}</text>`;
+});
+const chart1 = `
+<svg viewBox="0 0 420 ${d.controles.length*rowH+12}" width="100%" role="img" aria-label="Anomalies par controle">
+  ${bars}
+</svg>`;
+
+// --- CHART 2 : donut repartition par criticite ---
+const donutData = [
+  {k:"Critique", v:s["Critique"]||0, c:"var(--red)"},
+  {k:"Élevé", v:s["Élevé"]||0, c:"var(--orange)"},
+  {k:"Modéré", v:s["Modéré"]||0, c:"var(--yellow)"},
+  {k:"Conforme", v:s["conformes"]||0, c:"var(--green-br)"},
+].filter(x=>x.v>0);
+const sum = donutData.reduce((a,b)=>a+b.v,0)||1;
+const R=52, r=32, cx=70, cy=70;
+const polar=(ang)=>[cx+R*Math.cos(ang), cy+R*Math.sin(ang)];
+const polarIn=(ang)=>[cx+r*Math.cos(ang), cy+r*Math.sin(ang)];
+let a0=-Math.PI/2, arcs="";
+donutData.forEach(seg=>{
+  const a1=a0+(seg.v/sum)*2*Math.PI;
+  const large=(a1-a0)>Math.PI?1:0;
+  const [x0,y0]=polar(a0),[x1,y1]=polar(a1),[x2,y2]=polarIn(a1),[x3,y3]=polarIn(a0);
+  arcs+=`<path d="M${x0} ${y0} A${R} ${R} 0 ${large} 1 ${x1} ${y1} L${x2} ${y2} A${r} ${r} 0 ${large} 0 ${x3} ${y3} Z" fill="${seg.c}"></path>`;
+  a0=a1;
+});
+const chart2 = `
+<svg viewBox="0 0 260 140" width="100%" role="img" aria-label="Repartition par criticite">
+  ${arcs}
+  <text x="${cx}" y="${cy-2}" text-anchor="middle" fill="var(--tx)" font-size="20" font-weight="700">${total}</text>
+  <text x="${cx}" y="${cy+14}" text-anchor="middle" fill="var(--mut)" font-size="10">contrôles</text>
+  ${donutData.map((seg,i)=>`
+    <rect x="150" y="${20+i*24}" width="11" height="11" rx="2" fill="${seg.c}"></rect>
+    <text x="168" y="${30+i*24}" fill="var(--tx2)" font-size="12.5">${esc(seg.k)} (${seg.v})</text>`).join("")}
+</svg>`;
+
+app.appendChild(h(`
+<div class="charts">
+  <div class="card"><div class="chart-t">Nombre d'anomalies détectées par contrôle</div>${chart1}</div>
+  <div class="card"><div class="chart-t">Répartition des contrôles par criticité</div>${chart2}</div>
+</div>`));
+
+/* ===================== REGISTRE ===================== */
+app.appendChild(h(`<h2><span class="kicker">Les résultats</span>Registre des constats</h2>`));
+app.appendChild(h(`<p style="color:var(--mut);margin-top:0">Le détail de chaque contrôle : ce qu'il vérifie,
+  pourquoi c'est important pour la banque, ce qui a été trouvé, et la recommandation associée.</p>`));
+d.controles.forEach(c=>{
+  const stCls = c.statut==="CONFORME"?"st-ok":"st-ko";
+  const reco = c.recommandation?`<div class="reco"><b>Recommandation :</b> ${esc(c.recommandation)}</div>`:"";
+  const ex = c.exemples.length?`<div class="ex">Exemples d'identifiants concernés : ${c.exemples.map(esc).join(", ")}</div>`:"";
   app.appendChild(h(`
-    <div class="card">
-      <div class="ctrl-head">
-        <span class="ctrl-id">${esc(c.id)}</span>
-        <span class="tag pill-${esc(c.pilier)}">${esc(c.pilier)}</span>
-        <span style="font-weight:600">${esc(c.libelle)}</span>
-        <span style="margin-left:auto" class="tag ${stCls}">${esc(c.statut)}</span>
-        <span class="tag crit-${esc(c.criticite)}">${esc(c.criticite)}</span>
-      </div>
-      <div class="desc">${esc(c.description)}</div>
-      <div class="constat">${esc(c.constat)}</div>
-      ${reco}
-      ${ex}
-      <details><summary>Voir la règle et la fiabilité</summary>
-        <code>${esc(c.regle)}</code>
-        <div class="ex" style="margin-top:8px">Fiabilité : précision ${c.fiabilite.precision}, rappel ${c.fiabilite.rappel}, F1 ${c.fiabilite.f1}</div>
-      </details>
+  <div class="card">
+    <div class="ctrl-head">
+      <span class="ctrl-id">${esc(c.id)}</span>
+      <span class="tag pill-${esc(c.pilier)}">${esc(c.pilier)}</span>
+      <span style="font-weight:600">${esc(c.libelle)}</span>
+      <span style="margin-left:auto" class="tag ${stCls}">${esc(c.statut)}</span>
+      <span class="tag crit-${esc(c.criticite)}">${esc(c.criticite)}</span>
     </div>
-  `));
+    <div class="desc"><b>Ce que le contrôle vérifie :</b> ${esc(c.description)}</div>
+    <div class="why"><b>Pourquoi c'est important :</b> ${esc(c.pourquoi||"")}</div>
+    <div class="constat"><b>Constat :</b> ${esc(c.constat)}</div>
+    ${reco}
+    <details><summary>Voir la règle exécutée et la fiabilité de ce contrôle</summary>
+      <code>${esc(c.regle)}</code>
+      ${ex}
+      <div class="ex">Fiabilité : précision ${c.fiabilite.precision}, rappel ${c.fiabilite.rappel}, F1 ${c.fiabilite.f1}
+        (VP ${c.fiabilite.tp}, FP ${c.fiabilite.fp}, FN ${c.fiabilite.fn})</div>
+    </details>
+  </div>`));
 });
 
-// -- Fiabilite --
-app.appendChild(h(`<h2>Fiabilité du moteur de contrôle</h2>`));
+/* ===================== EXPLORATEUR DE DONNEES ===================== */
+const ROWS = window.INSPECTION_ROWS;
+if (ROWS) {
+  app.appendChild(h(`<h2><span class="kicker">Transparence</span>Consulter les données</h2>`));
+  app.appendChild(h(`<p style="color:var(--mut);margin-top:0">Parcourez les données réellement inspectées. Les
+    lignes en anomalie sont surlignées et indiquent le ou les contrôles qui les ont signalées.</p>`));
+  const host = h(`<div class="card"></div>`); app.appendChild(host);
+  const COLS = {
+    prets: [["pret_id","Prêt"],["client_id","Client"],
+      ["montant","Montant",v=>v==null?"—":Number(v).toLocaleString("fr-FR")+" €"],
+      ["taux","Taux",v=>v==null?"—":v+" %"],["date_octroi","Date d'octroi"],
+      ["statut","Statut"],["notation_risque","Notation",v=>v==null?"—":v]],
+    clients: [["client_id","Client"],["nom","Nom"],["prenom","Prénom"],
+      ["date_naissance","Naissance"],["email","Email"],["date_maj","Dernière MAJ"],
+      ["date_collecte","Collecte"],["consentement_rgpd","RGPD",v=>v?"Oui":"Non"]],
+    catalogue: [["champ","Champ"],["entite","Table"],["sensibilite","Sensibilité"],
+      ["data_owner","Data Owner",v=>v==null?"—":v],["data_steward","Data Steward",v=>v==null?"—":v],
+      ["source_systeme","Source",v=>v==null?"—":v],
+      ["duree_retention_jours","Rétention (j)",v=>(v==null||v<0)?"—":v],
+      ["is_pii","PII",v=>v?"Oui":"Non"]],
+  };
+  const state = { entite:"prets", ctrl:"all", q:"", page:0, size:12 };
+  const ctrlOptions = ()=>{
+    const list = ROWS.controls.filter(c=>c.entite===state.entite);
+    return `<option value="all">Tout afficher</option><option value="anomalies">Anomalies seulement</option>`+
+      list.map(c=>`<option value="${c.id}">${esc(c.id)} — ${esc(c.libelle)}</option>`).join("");
+  };
+  const filtered = ()=>{
+    const cols = COLS[state.entite]; let rows = ROWS[state.entite];
+    if (state.ctrl==="anomalies") rows = rows.filter(r=>r._flags.length);
+    else if (state.ctrl!=="all") rows = rows.filter(r=>r._flags.includes(state.ctrl));
+    if (state.q){ const q = state.q.toLowerCase();
+      rows = rows.filter(r=>cols.some(c=>String(r[c[0]]??"").toLowerCase().includes(q))); }
+    return rows;
+  };
+  function render(){
+    const cols = COLS[state.entite]; const rows = filtered();
+    const pages = Math.max(1, Math.ceil(rows.length/state.size));
+    if (state.page>=pages) state.page = pages-1;
+    const slice = rows.slice(state.page*state.size, state.page*state.size+state.size);
+    const head = cols.map(c=>`<th>${esc(c[1])}</th>`).join("")+`<th>Anomalie</th>`;
+    const body = slice.map(r=>{
+      const tds = cols.map(c=>`<td>${esc(c[2]?c[2](r[c[0]]):(r[c[0]]??"—"))}</td>`).join("");
+      const flags = r._flags.length
+        ? `<td class="exp-flags">${r._flags.map(f=>`<span class="tag">${esc(f)}</span>`).join("")}</td>`
+        : `<td style="color:var(--green-br)">Conforme</td>`;
+      return `<tr class="${r._flags.length?"anom":""}">${tds}${flags}</tr>`;
+    }).join("");
+    host.innerHTML = `
+      <div class="exp-bar">
+        <span class="seg">
+          <button data-e="prets" class="${state.entite==="prets"?"on":""}">Prêts</button>
+          <button data-e="clients" class="${state.entite==="clients"?"on":""}">Clients</button>
+          <button data-e="catalogue" class="${state.entite==="catalogue"?"on":""}">Catalogue</button>
+        </span>
+        <select id="expCtrl">${ctrlOptions()}</select>
+        <input id="expQ" placeholder="Rechercher..." value="${esc(state.q)}">
+        <span class="exp-count">${rows.length} enregistrement(s)</span>
+      </div>
+      <div class="exp-wrap"><table class="exp-table"><thead><tr>${head}</tr></thead>
+        <tbody>${body||`<tr><td colspan="${cols.length+1}">Aucun résultat.</td></tr>`}</tbody></table></div>
+      <div class="pager">
+        <button id="expPrev" ${state.page<=0?"disabled":""}>Précédent</button>
+        <span>Page ${state.page+1} / ${pages}</span>
+        <button id="expNext" ${state.page>=pages-1?"disabled":""}>Suivant</button>
+      </div>`;
+    host.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{state.entite=b.dataset.e;state.ctrl="all";state.q="";state.page=0;render();});
+    const sel = host.querySelector("#expCtrl"); sel.value = state.ctrl;
+    sel.onchange = ()=>{state.ctrl=sel.value;state.page=0;render();};
+    const q = host.querySelector("#expQ");
+    q.oninput = ()=>{state.q=q.value;state.page=0;render();
+      const el=host.querySelector("#expQ"); el.focus(); el.setSelectionRange(el.value.length,el.value.length);};
+    host.querySelector("#expPrev").onclick=()=>{if(state.page>0){state.page--;render();}};
+    host.querySelector("#expNext").onclick=()=>{state.page++;render();};
+  }
+  render();
+}
+
+/* ===================== F1 EXPLIQUE ===================== */
+const g = d.eval;
+// exemple pedagogique fixe
+const exVP=10, exFP=2, exFN=1;
+const exP=(exVP/(exVP+exFP)), exR=(exVP/(exVP+exFN));
+const exF1=2*exP*exR/(exP+exR);
+app.appendChild(h(`<h2><span class="kicker">La fiabilité</span>Comment sait-on que le moteur est fiable ? (le score F1)</h2>`));
 app.appendChild(h(`
-  <p class="legend">
-    Chaque contrôle est testé sur un jeu où les anomalies sont connues à l'avance. La précision
-    indique la part de détections justes, le rappel la part d'anomalies retrouvées, le F1 combine les deux.
-  </p>
-`));
-const rows = d.controles.map(c => `
-  <tr><td>${esc(c.id)}</td><td>${esc(c.libelle)}</td>
-  <td>${c.fiabilite.precision}</td><td>${c.fiabilite.rappel}</td><td>${c.fiabilite.f1}</td></tr>`).join("");
-app.appendChild(h(`
+<div class="card">
+  <p>Un contrôle ne vaut que s'il détecte réellement les anomalies. Pour le vérifier, on utilise une astuce :
+  on part d'un jeu de données dont on <b>connaît déjà toutes les anomalies</b>, parce qu'on les a
+  volontairement introduites. On appelle ça la <b>vérité terrain</b>. On lance ensuite le moteur
+  <b>sans lui dire où elles sont</b>, et on compare ce qu'il trouve à ce que l'on savait déjà.</p>
+
+  <h3>Trois cas possibles pour chaque enregistrement</h3>
+  <div class="cmat">
+    <div><div class="h vp">Vrai positif (VP)</div><p>Le moteur signale une anomalie, et c'en était bien une. Bonne détection.</p></div>
+    <div><div class="h fp">Faux positif (FP)</div><p>Le moteur signale une anomalie sur une donnée saine. Fausse alerte.</p></div>
+    <div><div class="h fn">Faux négatif (FN)</div><p>Le moteur laisse passer une vraie anomalie. Oubli.</p></div>
+  </div>
+
+  <h3>Trois mesures qui en découlent</h3>
+  <div class="formula"><b>Précision</b> = VP / (VP + FP)&nbsp;&nbsp; &rarr; quand le moteur signale une anomalie, à quelle fréquence a-t-il raison ? (mesure les fausses alertes)</div>
+  <div class="formula"><b>Rappel</b> = VP / (VP + FN)&nbsp;&nbsp; &rarr; parmi toutes les vraies anomalies, combien en a-t-il attrapées ? (mesure les oublis)</div>
+  <div class="formula"><b>F1</b> = 2 &times; (Précision &times; Rappel) / (Précision + Rappel)&nbsp;&nbsp; &rarr; une note unique entre 0 et 1, élevée seulement si les deux le sont.</div>
+
+  <h3>Un exemple pour bien comprendre</h3>
+  <div class="worked">
+    <p style="margin:0 0 6px">Imaginons un contrôle qui signale <b>12 prêts</b>. En vérité, 10 étaient
+    réellement en anomalie, 2 étaient sains (fausses alertes), et le moteur a raté 1 anomalie :</p>
+    <div class="r">VP = 10&nbsp;&nbsp; FP = 2&nbsp;&nbsp; FN = 1</div>
+    <div class="r">Précision = 10 / (10 + 2) = ${exP.toFixed(2)}</div>
+    <div class="r">Rappel = 10 / (10 + 1) = ${exR.toFixed(2)}</div>
+    <div class="r">F1 = 2 &times; (${exP.toFixed(2)} &times; ${exR.toFixed(2)}) / (${exP.toFixed(2)} + ${exR.toFixed(2)}) = <b style="color:var(--green-br)">${exF1.toFixed(2)}</b></div>
+  </div>
+  <p>Un <b>F1 de 1,00</b> (le maximum) signifie donc : <b>aucune fausse alerte et aucun oubli</b>. Le moteur
+  a détecté exactement toutes les anomalies connues, ni plus, ni moins.</p>
+
+  <h3>Résultats de cette mission</h3>
   <table>
-    <thead><tr><th>Contrôle</th><th>Libellé</th><th>Précision</th><th>Rappel</th><th>F1</th></tr></thead>
-    <tbody>${rows}
-      <tr><td colspan="2"><b>Global</b></td><td><b>${d.eval.precision}</b></td>
-      <td><b>${d.eval.rappel}</b></td><td><b>${d.eval.f1}</b></td></tr>
+    <thead><tr><th>Contrôle</th><th>VP</th><th>FP</th><th>FN</th><th>Précision</th><th>Rappel</th><th>F1</th></tr></thead>
+    <tbody>
+    ${d.controles.map(c=>`<tr><td class="mono">${esc(c.id)}</td><td>${c.fiabilite.tp}</td><td>${c.fiabilite.fp}</td><td>${c.fiabilite.fn}</td><td>${c.fiabilite.precision}</td><td>${c.fiabilite.rappel}</td><td>${c.fiabilite.f1}</td></tr>`).join("")}
+    <tr class="total"><td>Global</td><td>${g.tp}</td><td>${g.fp}</td><td>${g.fn}</td><td>${g.precision}</td><td>${g.rappel}</td><td>${g.f1.toFixed(2)}</td></tr>
     </tbody>
   </table>
-`));
+  <div class="note" style="margin-top:16px">
+    <b>Lecture honnête du score.</b> Ici, le moteur est testé sur un jeu où les anomalies sont connues
+    d'avance. Un F1 de <b>${g.f1.toFixed(2)}</b> ne dit pas que les données de la banque sont parfaites,
+    il dit que <b>les règles de contrôle sont écrites correctement</b> : elles attrapent les
+    ${g.tp} anomalies ciblées sans déclencher une seule fausse alerte. C'est la garantie que l'outil
+    d'inspection est fiable avant de l'appliquer à des données réelles.
+  </div>
+</div>`));
+
+/* ===================== FOOTER ===================== */
+/* ===================== PASSAGE AUX DONNEES REELLES ===================== */
+app.appendChild(h(`<h2><span class="kicker">Aller plus loin</span>Et sur des données réelles ?</h2>`));
+app.appendChild(h(`
+<div class="card">
+  <p>Ce rapport valide le moteur sur un jeu où les anomalies sont connues d'avance. La vraie question :
+  comment garantir la fiabilité sur des données réelles, dont on ignore les erreurs au départ ? Voici la démarche.</p>
+
+  <h3>Des règles, pas des devinettes</h3>
+  <p style="color:var(--tx2)">Les contrôles sont des <b>règles métier déterministes</b> (montant nul, notation
+  hors référentiel, doublon...), pas des modèles qui devinent. Sur données réelles, tout enregistrement
+  signalé viole <b>réellement</b> la règle : la précision est acquise par construction une fois la règle
+  validée. Le test sur données connues sert précisément à valider la règle avant de l'appliquer au réel.</p>
+
+  <h3>Écarter les fausses alertes métier</h3>
+  <p style="color:var(--tx2)">Une règle violée n'est pas toujours un vrai problème (un montant à 0 peut être
+  normal pour certains produits). L'inspecteur confronte chaque constat aux équipes auditées pour trancher et
+  affiner la règle : c'est le <b>challenge des métiers</b>, un travail d'analyse, pas de machine.</p>
+
+  <h3>Débusquer ce qu'aucune règle ne cherche</h3>
+  <p style="color:var(--tx2)">Les oublis (erreurs qu'aucune règle ne vise) s'estiment sans vérité terrain :
+  <b>échantillonnage et revue d'expert</b> sur des enregistrements signalés et non signalés,
+  <b>réconciliation</b> avec une source indépendante (les totaux doivent concorder),
+  <b>comparaison d'un même champ entre deux systèmes</b>, et <b>détection statistique d'anomalies</b>
+  (valeurs aberrantes, dérives dans le temps) pour faire émerger l'inconnu.</p>
+
+  <h3>Prioriser plutôt que tout tester</h3>
+  <p style="color:var(--tx2)">On ne contrôle pas tout : <b>l'approche par les risques</b> cible les données
+  les plus critiques. Et chaque incident réel qui échappe aux contrôles devient une nouvelle règle : le
+  dispositif s'améliore en continu.</p>
+
+  <div class="note"><b>En résumé.</b> Le test sur données synthétiques prouve que les règles sont correctes ;
+  sur données réelles, leur nature déterministe garantit la précision, tandis que le rappel s'estime et
+  s'améliore par échantillonnage, réconciliation et détection d'anomalies, dans une boucle continue.</div>
+</div>`));
 
 app.appendChild(h(`
-  <footer>
-    Méthode : les contrôles sont des règles codées (SQL), exécutées de façon reproductible ; le moteur
-    détecte et note, sans interprétation par un modèle. P0 : 5 contrôles qualité sur un jeu de test contrôlé.
-    Étapes suivantes : contrôles de gouvernance et de protection des données, rédaction assistée des
-    recommandations, surveillance périodique automatisée.
-  </footer>
-`));
+<footer>
+  <p><b>Méthode.</b> Les contrôles sont des règles codées, exécutées de façon reproductible ; le moteur
+  détecte et note, sans interprétation par un modèle. Ce rapport est la version P0 de la mission :
+  5 contrôles de qualité sur la chaîne de données du risque de crédit.</p>
+  <p><b>Prochaines étapes.</b> Contrôles de gouvernance (traçabilité, responsables des données) et de
+  protection des données (RGPD), score de risque consolidé, rédaction assistée des recommandations,
+  et surveillance périodique automatisée.</p>
+  <p style="color:var(--green-deep)">Ce rapport peut être imprimé ou enregistré en PDF depuis le navigateur (Ctrl + P).</p>
+</footer>`));
 </script>
 </body>
 </html>
