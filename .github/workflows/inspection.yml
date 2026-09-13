@@ -1,0 +1,35 @@
+name: Mission d'inspection (rapport automatique)
+
+on:
+  workflow_dispatch:        # lancement manuel
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 6 * * 1'     # tous les lundis a 06:00 UTC (surveillance periodique)
+
+jobs:
+  inspection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installer les dependances
+        run: |
+          pip install -r requirements.txt
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Lancer l'inspection et generer le rapport PDF
+        run: python run.py --pdf
+
+      - name: Publier le rapport et le registre
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-inspection
+          path: |
+            reports/rapport_inspection.pdf
+            data/registre.csv
