@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>INSPECTION DATA - NOVEO Banque</title>
+<style>
+  :root{
+    --bg:#191919; --card:#212121; --card2:#1c1c1c; --line:#2e2e2e;
+    --tx:#eaeaea; --mut:#9a9a9a;
+    --green:#34d399; --red:#f87171; --amber:#fbbf24; --orange:#fb923c;
+    --blue:#60a5fa; --purple:#a78bfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);
+       font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:26px;margin:0}
+  h2{font-size:18px;margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .sub{color:var(--mut);margin-top:4px}
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--mut);font-size:14px;margin-top:10px}
+  .meta b{color:var(--tx)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:6px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+  .stat .n{font-size:28px;font-weight:700}
+  .stat .l{color:var(--mut);font-size:13px;margin-top:2px}
+  .ctrl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .ctrl-id{font-weight:700;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .pill-Qualité{color:var(--blue);border-color:var(--blue)}
+  .st-ok{color:var(--green);border-color:var(--green)}
+  .st-ko{color:var(--red);border-color:var(--red)}
+  .crit-Critique{color:var(--red);border-color:var(--red)}
+  .crit-Élevé{color:var(--orange);border-color:var(--orange)}
+  .crit-Modéré{color:var(--amber);border-color:var(--amber)}
+  .crit-Conforme{color:var(--green);border-color:var(--green)}
+  .desc{color:var(--mut);font-size:14px;margin:8px 0}
+  .constat{margin:10px 0 6px}
+  .reco{background:var(--card2);border-left:3px solid var(--green);padding:10px 12px;border-radius:6px;font-size:14px}
+  .reco b{color:var(--green)}
+  details{margin-top:10px}
+  summary{cursor:pointer;color:var(--mut);font-size:13px}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#cbd5e1;
+       display:block;white-space:pre-wrap;background:#111;padding:10px;border-radius:6px;margin-top:8px}
+  .ex{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--mut)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600}
+  .legend{color:var(--mut);font-size:13px}
+  footer{color:var(--mut);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+  @media print{
+    body{background:#fff;color:#111}
+    .card,.stat{background:#fff;border-color:#ccc}
+    .reco{background:#f4f4f4}
+    code{background:#f4f4f4;color:#111}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script src="findings.js"></script>
+<script>
+const d = window.INSPECTION_DATA;
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+
+function h(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; }
+
+// -- En-tete + cadrage --
+const m = d.mission;
+app.appendChild(h(`
+  <div>
+    <h1>INSPECTION DATA</h1>
+    <div class="sub">${esc(m.titre)} &mdash; ${esc(m.entite)}</div>
+    <div class="card" style="margin-top:16px">
+      <div class="meta">
+        <span><b>Entité auditée :</b> ${esc(m.entite)}</span>
+        <span><b>Périmètre :</b> ${esc(m.perimetre)}</span>
+        <span><b>Date de mission :</b> ${esc(m.date_mission)}</span>
+        <span><b>Référentiels :</b> ${m.referentiels.map(esc).join(", ")}</span>
+        <span><b>Volumétrie :</b> ${d.dataset.clients} clients, ${d.dataset.prets} prêts</span>
+      </div>
+      <p style="margin:12px 0 0">${esc(m.cadrage)}</p>
+      <p class="legend" style="margin:10px 0 0">
+        Comment lire ce rapport : chaque contrôle vérifie une règle sur les données. Un contrôle
+        <span class="tag st-ko">NON CONFORME</span> signale des anomalies, notées de
+        <span class="tag crit-Modéré">Modéré</span> à <span class="tag crit-Critique">Critique</span>.
+        La fiabilité du moteur mesure sa capacité à détecter les anomalies sans se tromper.
+      </p>
+    </div>
+  </div>
+`));
+
+// -- Synthese --
+const s = d.synthese;
+const total = d.controles.length;
+const conf = Math.round((s.conformes/total)*100);
+app.appendChild(h(`<h2>Synthèse</h2>`));
+app.appendChild(h(`
+  <div class="grid">
+    <div class="stat"><div class="n" style="color:var(--red)">${s["Critique"]||0}</div><div class="l">Constats critiques</div></div>
+    <div class="stat"><div class="n" style="color:var(--orange)">${s["Élevé"]||0}</div><div class="l">Constats élevés</div></div>
+    <div class="stat"><div class="n" style="color:var(--amber)">${s["Modéré"]||0}</div><div class="l">Constats modérés</div></div>
+    <div class="stat"><div class="n">${conf}%</div><div class="l">Contrôles conformes</div></div>
+    <div class="stat"><div class="n" style="color:var(--green)">${d.eval.f1.toFixed(2)}</div><div class="l">Fiabilité (F1)</div></div>
+  </div>
+`));
+
+// -- Registre --
+app.appendChild(h(`<h2>Registre des constats</h2>`));
+d.controles.forEach(c => {
+  const stCls = c.statut === "CONFORME" ? "st-ok" : "st-ko";
+  const reco = c.recommandation ? `<div class="reco"><b>Recommandation :</b> ${esc(c.recommandation)}</div>` : "";
+  const ex = c.exemples.length ? `<div class="ex">Exemples : ${c.exemples.map(esc).join(", ")}</div>` : "";
+  app.appendChild(h(`
+    <div class="card">
+      <div class="ctrl-head">
+        <span class="ctrl-id">${esc(c.id)}</span>
+        <span class="tag pill-${esc(c.pilier)}">${esc(c.pilier)}</span>
+        <span style="font-weight:600">${esc(c.libelle)}</span>
+        <span style="margin-left:auto" class="tag ${stCls}">${esc(c.statut)}</span>
+        <span class="tag crit-${esc(c.criticite)}">${esc(c.criticite)}</span>
+      </div>
+      <div class="desc">${esc(c.description)}</div>
+      <div class="constat">${esc(c.constat)}</div>
+      ${reco}
+      ${ex}
+      <details><summary>Voir la règle et la fiabilité</summary>
+        <code>${esc(c.regle)}</code>
+        <div class="ex" style="margin-top:8px">Fiabilité : précision ${c.fiabilite.precision}, rappel ${c.fiabilite.rappel}, F1 ${c.fiabilite.f1}</div>
+      </details>
+    </div>
+  `));
+});
+
+// -- Fiabilite --
+app.appendChild(h(`<h2>Fiabilité du moteur de contrôle</h2>`));
+app.appendChild(h(`
+  <p class="legend">
+    Chaque contrôle est testé sur un jeu où les anomalies sont connues à l'avance. La précision
+    indique la part de détections justes, le rappel la part d'anomalies retrouvées, le F1 combine les deux.
+  </p>
+`));
+const rows = d.controles.map(c => `
+  <tr><td>${esc(c.id)}</td><td>${esc(c.libelle)}</td>
+  <td>${c.fiabilite.precision}</td><td>${c.fiabilite.rappel}</td><td>${c.fiabilite.f1}</td></tr>`).join("");
+app.appendChild(h(`
+  <table>
+    <thead><tr><th>Contrôle</th><th>Libellé</th><th>Précision</th><th>Rappel</th><th>F1</th></tr></thead>
+    <tbody>${rows}
+      <tr><td colspan="2"><b>Global</b></td><td><b>${d.eval.precision}</b></td>
+      <td><b>${d.eval.rappel}</b></td><td><b>${d.eval.f1}</b></td></tr>
+    </tbody>
+  </table>
+`));
+
+app.appendChild(h(`
+  <footer>
+    Méthode : les contrôles sont des règles codées (SQL), exécutées de façon reproductible ; le moteur
+    détecte et note, sans interprétation par un modèle. P0 : 5 contrôles qualité sur un jeu de test contrôlé.
+    Étapes suivantes : contrôles de gouvernance et de protection des données, rédaction assistée des
+    recommandations, surveillance périodique automatisée.
+  </footer>
+`));
+</script>
+</body>
+</html>
